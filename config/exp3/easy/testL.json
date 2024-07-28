@@ -1,0 +1,82 @@
+{
+    "name": "Exp3-testL",
+    "n_gpu": 1,
+    "feature_model": {
+        "type": "ResNet18Encoder",
+        "args": {
+            "num_channels": 14,
+            "pretrained": false,
+            "dropout": 0.3498992409645899
+        },
+        "pretrained": {
+            "path": "saved/best_models/MLP64/BongardLogo/model_best.pth",
+            "cotrain": false
+        }
+    },
+    "reason_model": {
+        "type": "MLP",
+        "args": {
+            "input_size": 512,
+            "hidden_sizes": [128],
+            "output_size": 64
+        },
+        "pretrained": {
+            "path": "saved/best_models/MLP64/BongardHOI/model_best.pth",
+            "cotrain": false
+        }
+    },
+    "head_model": {
+        "type": "MLPHead",
+        "args": {
+            "input_size": 64,
+            "hidden_sizes": [8],
+            "output_size": 2
+        },
+        "pretrained": {
+            "path": "saved/best_models/MLP64/BongardLogo/model_best.pth",
+            "cotrain": false
+        }
+    },
+    "data_loader": {
+        "type": "BongardLogoDataLoader",
+        "args":{
+            "data_dir": "../DATA/bongard/ShapeBongard_V2",
+            "batch_size": 16,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 8
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 3.1161582697548783e-05,
+            "weight_decay": 1.5763202837786187e-05,
+            "amsgrad": true
+        }
+    },
+    "loss": "cross_entropy_loss",
+    "metrics": [
+        "accuracy"
+    ],
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "step_size": 50,
+            "gamma": 0.1
+        }
+    },
+    "trainer": {
+        "epochs": 100,
+
+        "save_dir": "saved/",
+        "save_period": 3,
+        "verbosity": 2,
+        
+        "monitor": "min val_loss",
+        "early_stop": 20,
+
+        "tensorboard": false,
+        "wandb": true
+    }
+}

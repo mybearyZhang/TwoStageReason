@@ -1,0 +1,90 @@
+{
+    "name": "Exp3-L-SHAV-ra",
+    "n_gpu": 1,
+    "feature_model": {
+        "type": "CFEncoder",
+        "args": {
+            "state_size": 14,
+            "z_size": 512,
+            "freeze": true
+        },
+        "pretrained": {
+            "path": "saved/best_models/MLP64/CophyColli/model_best.pth",
+            "cotrain": false
+        }
+    },
+    "reason_model": {
+        "type": "MLP",
+        "args": {
+            "input_size": 512,
+            "hidden_sizes": [128],
+            "output_size": 64,
+            "freeze": true
+        },
+        "pretrained": {
+            "path": "/home/mingyu/multitask-reasoning/saved/models/Exp3-SHAV/1107_185234/checkpoint-epoch84.pth",
+            "cotrain": true
+        }
+    },
+    "head_model": {
+        "type": "CFDecoder",
+        "args": {
+            "state_size": 14,
+            "z_size": 64,
+            "freeze": true
+        },
+        "pretrained_disable": {
+            "path": "saved/best_models/MLP64/CophyColli/model_best.pth",
+            "cotrain": false
+        }
+    },
+    "data_loader": {
+        "type": "FCCollisionDataLoader",
+        "args":{
+            "data_dir": "../DATA/cophydataset/OUTCOLLISION",
+            "batch_size": 16,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 6
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.0011009503037080074,
+            "weight_decay": 2.798197487260918e-08,
+            "amsgrad": true
+        }
+    },
+    "loss": "mse_loss",
+    "metrics": [
+        "CFScore"
+    ],
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "step_size": 50,
+            "gamma": 0.1
+        }
+    },
+    "trainer": {
+        "epochs": 100,
+
+        "save_dir": "saved/",
+        "save_period": 3,
+        "verbosity": 2,
+        
+        "monitor": "min val_loss",
+        "early_stop": 10,
+
+        "adapter": {
+            "input_size": 512,
+            "output_size": 512,
+            "lr": 7.179440669483468e-05,
+            "weight_decay": 1.0045281958616361e-08
+        },
+
+        "tensorboard": false,
+        "wandb": true
+    }
+}

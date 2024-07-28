@@ -1,0 +1,99 @@
+{
+    "name": "Exp3-testV-ra",
+    "n_gpu": 1,
+    "feature_model": {
+        "type": "VQAencoder",
+        "args": {
+            "embed_size": 512,
+            "qst_vocab_size": 13189,
+            "word_embed_size": 300,
+            "qst_embed_size": 512,
+            "num_layers": 2,
+            "hidden_size": 512,
+            "freeze":true
+        },
+        "pretrained": {
+            "path": "/home/mingyu/multitask-reasoning/saved/best_models/MLP64/VQA/model_best.pth",
+            "cotrain": false
+        }
+    },
+    "reason_model": {
+        "type": "MLP",
+        "args": {
+            "input_size": 512,
+            "hidden_sizes": [128],
+            "output_size": 64,
+            "freeze": true
+        },
+        "pretrained_disable": {
+            "path": "/home/mingyu/multitask-reasoning/saved/models/Exp3-SHAL/1107_184529/checkpoint-epoch90.pth",
+            "cotrain": false
+        }
+    },
+    "head_model": {
+        "type": "MLPHead",
+        "args": {
+            "input_size": 64,
+            "hidden_sizes": [
+                64
+            ],
+            "output_size": 1000,
+            "freeze":true
+        },
+        "pretrained": {
+            "path": "/home/mingyu/multitask-reasoning/saved/best_models/MLP64/VQA/model_best.pth",
+            "cotrain": false
+        }
+    },
+    "data_loader": {
+        "type": "VQADataLoader",
+        "args":{
+            "data_dir": "/home/mingyu/reasoning/COCO-2015/Resized_Images",
+            "batch_size": 16,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 6,
+            "n_samples": 8000
+            
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.0009355283618633292,
+            "weight_decay": 1.9813631447162124e-05,
+            "amsgrad": true
+        }
+    },
+    "loss": "vqa_loss",
+    "metrics": [
+        "VQAaccuracy"
+    ],
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "step_size": 50,
+            "gamma": 0.1
+        }
+    },
+    "trainer": {
+        "epochs": 100,
+
+        "save_dir": "saved/",
+        "save_period": 3,
+        "verbosity": 2,
+        
+        "monitor": "max val_VQAaccuracy",
+        "early_stop": 10,
+
+        "adapter": {
+            "input_size": 512,
+            "output_size": 512,
+            "lr": 7.179440669483468e-05,
+            "weight_decay": 1.0045281958616361e-08
+        },
+
+        "tensorboard": false,
+        "wandb": false
+    }
+}

@@ -1,0 +1,198 @@
+{
+    "name": "Exp3-SHA",
+    "n_gpu": 1,
+    "feature_models": {
+        "SVRT": {
+            "type": "ResNet18Encoder",
+            "args": {
+                "num_channels": 3,
+                "pretrained": false,
+                "dropout": 0.13713746566589535
+            }
+        },
+        "BongardHOI": {
+            "type": "ResNet18Encoder",
+            "args": {
+                "num_channels": 42,
+                "pretrained": false,
+                "dropout": 0.34733180040523426
+            }
+        },
+        "CophyBall": {
+            "type": "CFEncoder",
+            "args": {
+                "state_size": 14,
+                "z_size": 512
+            }
+        }
+
+    },
+    "reason_model": {
+        "type": "MLP",
+        "args": {
+            "input_size": 512,
+            "hidden_sizes": [128],
+            "output_size": 64
+        }
+    },
+    "head_models": {
+        "SVRT": {
+            "type": "MLPHead",
+            "args": {
+                "input_size": 64,
+                "hidden_sizes": [8],
+                "output_size": 2
+            }
+        },
+        "BongardHOI": {
+            "type": "MLPHead",
+            "args": {
+                "input_size": 64,
+                "hidden_sizes": [8],
+                "output_size": 2
+            }
+        },
+        "CophyBall": {
+            "type": "CFDecoder",
+            "args": {
+                "state_size": 14,
+                "z_size": 64
+            }
+        }
+    },
+    "data_loaders": {
+        "SVRT": {
+            "type": "SvrtDataLoader",
+            "args": {
+                "data_dir": "../DATA/svrt/results_problem_21/",
+                "batch_size": 8,
+                "shuffle": true,
+                "split": "train",
+                "val_samples": 1000,
+                "n_samples":3000,
+                "num_workers": 4
+            }
+        },
+        "BongardHOI": {
+            "type": "BongardHoiDataLoader",
+            "args": {
+                "data_dir": "../DATA/hake",
+                "batch_size": 16,
+                "shuffle": true,
+                "val_samples": 1000,
+                "n_samples":3000,
+                "num_workers": 4
+            }
+        },
+        "CophyBall": {
+            "type": "FCBallsDataLoader",
+            "args": {
+                "data_dir": "../DATA/cophydataset/OUTBALLS",
+                "batch_size": 16,
+                "shuffle": true,
+                "val_samples": 1000,
+                "n_samples":3000,
+                "num_workers": 6
+            }
+        }
+
+    },
+    "optimizers": {
+        "SVRT": {
+            "type": "Adam",
+            "args": {
+                "lr": 7.422948632267287e-05,
+                "weight_decay": 6.662823769423705e-05,
+                "amsgrad": true
+            }
+        },
+        "BongardHOI": {
+            "type": "Adam",
+            "args": {
+                "lr": 0.00012109488400553044,
+                "weight_decay": 1.8443672512857624e-05,
+                "amsgrad": true
+            }
+        },
+        "CophyBall": {
+            "type": "Adam",
+            "args":{
+                "lr": 0.0009355283618633292,
+                "weight_decay": 1.9813631447162124e-05,
+                "amsgrad": true
+            }
+        },
+        
+        "reasoning": {
+            "type": "Adam",
+            "args":{
+                "lr": 5e-5,
+                "weight_decay": 1e-7,
+                "amsgrad": true
+            }
+        }
+    },
+    "lr_schedulers": {
+        "SVRT": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        },
+        "BongardHOI": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        },
+        "CophyBall": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        },
+     
+        "reasoning": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        }
+    },
+    "losses": {
+        "SVRT": "cross_entropy_loss",
+        "BongardHOI": "cross_entropy_loss",
+        "CophyBall": "mse_loss"
+
+    },
+    "metrics": {
+        "SVRT": ["accuracy"],
+        "BongardHOI": ["accuracy"],
+        "CophyBall": ["CFScore"]
+    },
+    "trainer": {
+        "epochs": 100,
+
+        "save_dir": "saved/",
+        "save_period": 3,
+        "verbosity": 2,
+        
+        "monitor": "max total_val_acc",
+        "early_stop": 30,
+
+        "entry_epochs": {
+            "SVRT": 0,
+            "BongardHOI": 0,
+            "CophyBall": 0
+        },
+
+        "pick_prob": true,
+
+        "tensorboard": false,
+        "wandb": false
+    }
+}

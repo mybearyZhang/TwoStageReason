@@ -1,0 +1,253 @@
+{
+    "name": "RAVEN-CVR-SVRT-HOI",
+    "n_gpu": 1,
+    "feature_models": {
+        "RAVEN": {
+            "type": "ResNet18Encoder",
+            "args": {
+                "num_channels": 16,
+                "pretrained": false,
+                "dropout": 0.3498992409645899,
+                "freeze": false,
+                "state": 0,
+                "keep_dim": true
+        }
+        },
+        "CVR": {
+            "type": "ResNet18Encoder",
+            "args": {
+                "num_channels": 3,
+                "pretrained": false,
+                "dropout": 0.4,
+                "reshape": "CVR"
+        }
+        },
+        "SVRT": {
+            "type": "ResNet18Encoder",
+            "args": {
+                "num_channels": 3,
+                "pretrained": false,
+                "dropout": 0.16244171674777802,
+                "state": 0
+        }
+        },
+        "BongardHOI": {
+            "type": "ResNet18Encoder",
+            "args": {
+                "num_channels": 42,
+                "pretrained": false,
+                "dropout": 0.34733180040523426
+        }
+        }
+    },
+    "reason_model": {
+        "type": "GCN",
+        "args": {
+            "input_size": 512,
+            "hidden_size": 128,
+            "output_size": 8
+        }
+    },
+    "head_models": {
+        "RAVEN": {
+            "type": "RavenHead",
+            "args": {}
+        },
+        "CVR": {
+            "type": "CvrHead",
+            "args": {}
+        },
+        "SVRT": {
+            "type": "SvrtHead",
+            "args": {}
+        },
+        "BongardHOI": {
+            "type": "MLPHead",
+            "args": {
+                "input_size": 8,
+                "hidden_sizes": [8],
+                "output_size": 2
+            }
+        }
+    },
+    "data_loaders": {
+        "RAVEN": {
+            "type": "RavenDataLoader",
+            "args":{
+                "data_dir": "../DATA/RAVEN-10000/",
+                "batch_size": 16,
+                "shuffle": true,
+                "split": "train",
+                "validation_split": 0,
+                "num_workers": 4
+            }
+        },
+        "CVR": {
+            "type": "CvrDataLoader",
+            "args":{
+                "data_dir": "../DATA//CVR",
+                "batch_size": 8,
+                "shuffle": true,
+                "split": "train",
+                "validation_split": 0,
+                "num_workers": 4,
+                "n_samples": 1000
+            }
+        },
+        "SVRT": {
+            "type": "SvrtDataLoader",
+            "args":{
+                "data_dir": "../DATA/svrt/results_problem_21/",
+                "batch_size": 8,
+                "shuffle": true,
+                "split": "train",
+                "validation_split": 0,
+                "num_workers": 4
+            }
+        },
+        "BongardHOI":{
+            "type": "BongardHoiDataLoader",
+            "args":{
+                "data_dir": "../DATA/hake",
+                "batch_size": 16,
+                "shuffle": true,
+                "validation_split": 0.1,
+                "num_workers": 4,
+                "n_samples":5000
+            }
+        }
+    },
+    "optimizers": {
+        "RAVEN": {
+            "type": "Adam",
+            "args":{
+                "lr": 0.00014078502211427725,
+                "weight_decay": 0.0002242309875662113,
+                "amsgrad": true
+            }
+        },
+        "CVR": {
+            "type": "Adam",
+            "args":{
+                "lr": 0.0003663133221267387,
+                "weight_decay": 3.3257157891906423e-06,
+                "amsgrad": true
+            }
+        },
+        "SVRT": {
+            "type": "Adam",
+            "args":{
+                "lr": 5.991130809154712e-05,
+                "weight_decay": 6.376195552090027e-05,
+                "amsgrad": true
+            }
+        },
+        "BongardHOI" :{
+            "type": "Adam",
+            "args":{
+                "lr": 0.00012109488400553044,
+                "weight_decay": 1.8443672512857624e-05,
+                "amsgrad": true
+            }
+        },
+        "reasoning": {
+            "type": "Adam",
+            "args":{
+                "lr": 5e-5,
+                "weight_decay": 1e-7,
+                "amsgrad": true
+            }
+        }
+    },
+    "lr_schedulers": {
+        "RAVEN": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        },
+        "CVR": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        },
+        "SVRT": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        },
+        "BongardHOI": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        },
+        "reasoning": {
+            "type": "StepLR",
+            "args": {
+                "step_size": 50,
+                "gamma": 0.1
+            }
+        }
+    },
+    "losses": {
+        "RAVEN": "cross_entropy_loss",
+        "CVR": "cross_entropy_loss",
+        "SVRT": "cross_entropy_loss",
+        "BongardHOI": "cross_entropy_loss"
+    },
+    "metrics": {
+        "RAVEN": ["accuracy"],
+        "CVR": ["accuracy"],
+        "SVRT": ["accuracy"],
+        "BongardHOI": ["accuracy"]
+
+    },
+    "trainer": {
+        "epochs": 100,
+
+        "save_dir": "saved/",
+        "save_period": 5,
+        "verbosity": 2,
+        
+        "monitor": "max total_val_acc",
+        "early_stop": 10,
+
+        "entry_epochs": {
+            "RAVEN": 0,
+            "CVR": 0,
+            "SVRT": 0,
+            "BongardHOI":0
+        },
+
+        "pick_prob": true,
+
+        "tensorboard": false,
+        "wandb": true
+    },
+    "wandb_sweep": {
+        "method": "bayes",
+        "metric": {
+            "name": "best_total_val_acc",
+            "goal": "maximize"
+        },
+        "parameters": {
+            "lr": {
+                "distribution": "log_uniform_values",
+                "min": 1e-5, 
+                "max": 1e-2
+            },
+            "weight_decay": {
+                "distribution": "log_uniform_values", 
+                "min": 1e-8, 
+                "max": 1e-3
+            }
+        }
+    }
+}
