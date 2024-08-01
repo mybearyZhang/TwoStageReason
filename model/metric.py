@@ -35,11 +35,7 @@ def VQAaccuracy(output, target):
     label = target[0]
     multi_choice = target[1]
     _, pred_exp1 = torch.max(output, 1)  # [batch_size]
-    # _, pred_exp2 = torch.max(output, 1)  # [batch_size]
-    # pred_exp2[pred_exp2 == ans_unk_idx] = -9999
     running_corr_exp1 = 0
     running_corr_exp1 += torch.stack([(multi_choice[:, i] == pred_exp1) for i in range(multi_choice.shape[1])]).any(dim=0).sum()
-    # running_corr_exp2 += torch.stack([(ans == pred_exp2.cpu()) for ans in multi_choice]).any(dim=0).sum()
     epoch_acc_exp1 = running_corr_exp1.double() / len(label)      # multiple choice
-    # epoch_acc_exp2 = running_corr_exp2.double() / len(label)      # multiple choice
     return epoch_acc_exp1

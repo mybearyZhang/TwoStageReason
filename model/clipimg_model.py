@@ -10,12 +10,6 @@ from torch import nn
 from torchvision import transforms
 import numpy as np
 from PIL import Image
-# from PIL import Image
-# try:
-#     from torchvision.transforms import InterpolationMode
-#     BICUBIC = InterpolationMode.BICUBIC
-# except ImportError:
-#     BICUBIC = Image.BICUBIC
 
 
 from .build import MODEL_REGISTRY
