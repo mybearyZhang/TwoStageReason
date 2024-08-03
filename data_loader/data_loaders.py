@@ -6,14 +6,12 @@ from torchvision import datasets, transforms
 from base import BaseDataLoader
 from dataset.raven import RAVENDataset
 from dataset.cvrt import CVRDataset
-from dataset.bongard import BongardDataset
 from dataset.bongardhoi import BongardHoiDataset
 from dataset.bongardlogo import BongardLogoDataset
 from dataset.clevrer import PhysicsCLEVRDataset
 from dataset.filteredcophy import *
 from dataset.fckeypoint import *
 from dataset.VQAv2 import *
-from dataset.VQA import *
 
 class MnistDataLoader(BaseDataLoader):
     """
@@ -74,57 +72,38 @@ class SvrtDataLoader(BaseDataLoader):
             self.dataset = torch.utils.data.Subset(self.dataset, indexes)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
 
-class BongardDataLoader(BaseDataLoader):
-    def __init__(self, data_dir, batch_size, shuffle=True, validation_split=0.0, num_workers = 4, split='train', n_samples=-1, val_samples=-1):
-        self.data_dir = data_dir
-        self.dataset = BongardDataset(self.data_dir, img_size=256, use_clip=False, n_samples=n_samples)
-        super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
-
 class BongardHoiDataLoader(BaseDataLoader):
-    def __init__(self, data_dir, batch_size, shuffle = False, validation_split=0.0, num_workers = 4, split='train', n_samples=-1, val_samples=-1):
+    def __init__(self, data_dir, batch_size, shuffle=False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
         self.data_dir = data_dir
-        self.dataset = BongardHoiDataset(self.data_dir, data_split="unseen_obj_unseen_act", dset='test', balance_dataset=False, use_augs=False, img_size=224, backbone="clip", n_samples=n_samples)
+        self.dataset = BongardHoiDataset(self.data_dir, data_split="unseen_obj_unseen_act", dset=split, balance_dataset=False, use_augs=False, img_size=224, backbone="clip", n_samples=n_samples)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
 
 class BongardLogoDataLoader(BaseDataLoader):
-    def __init__(self, data_dir, batch_size, shuffle = False, validation_split= 0.0, num_workers = 4, split = 'train', image_size = 512, n_samples=-1, val_samples=-1):
+    def __init__(self, data_dir, batch_size, shuffle=False, validation_split=0.0, num_workers=4, split='train', image_size=512, n_samples=-1, val_samples=-1):
         self.data_dir = data_dir
         self.dataset = BongardLogoDataset(self.data_dir, dset=split, img_size = 512, use_augs = False, n_samples=n_samples)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
 
-# class ClevrerDataLoader(BaseDataLoader):
-#     def __init__(self, data_dir, batch_size, shuffle = False, validation_split= 0.0, num_workers = 4, split = '*', image_size = 512):
-#         self.data_dir = data_dir
-#         self.dataset = PhysicsCLEVRDataset(data_dir, phase = "train")
-#         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
-
 class FCBallsDataLoader(BaseDataLoader):
-    def __init__(self, data_dir, batch_size, shuffle = False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
+    def __init__(self, data_dir, batch_size, shuffle=False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
         self.data_dir = data_dir 
         self.dataset = ballsCF_Keypoints(path = data_dir, mode = split, n_samples=n_samples)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
 
 class FCBlockTowerDataLoader(BaseDataLoader):
-    def __init__(self, data_dir, batch_size, shuffle = False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
+    def __init__(self, data_dir, batch_size, shuffle=False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
         self.data_dir = data_dir 
         self.dataset = blocktowerCF_Keypoints(path = data_dir, mode = split, n_samples=n_samples)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
 
 class FCCollisionDataLoader(BaseDataLoader):
-    def __init__(self, data_dir, batch_size, shuffle = False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
+    def __init__(self, data_dir, batch_size, shuffle=False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
         self.data_dir = data_dir 
         self.dataset = collisionCF_Keypoints(path = data_dir, mode =split, n_samples=n_samples)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
 
-# class VQAv2DataLoader(BaseDataLoader):
-#     def __init__(self, data_path, batch_size, shuffle = False, validation_split=0.0, num_workers=4, split='train', image_size=512, n_samples=-1):
-#         self.data_dir = data_path
-#         self.dataset = VQAv2Dataset(split=split, data_path=data_path, n_samples=n_samples)
-#         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
-
-
 class VQADataLoader(BaseDataLoader):
-    def __init__(self, data_dir, batch_size, shuffle = False, validation_split= 0.0, num_workers = 4, split = 'train', n_samples=-1, val_samples=-1):
+    def __init__(self, data_dir, batch_size, shuffle=False, validation_split=0.0, num_workers=4, split='train', n_samples=-1, val_samples=-1):
         self.data_dir = data_dir 
-        self.dataset = VqaDataset(input_dir= data_dir, mode =split, n_samples=n_samples)
+        self.dataset = VQAv2Dataset(input_dir=data_dir, mode=split, n_samples=n_samples)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
