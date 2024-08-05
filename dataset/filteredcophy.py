@@ -14,6 +14,8 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
+
+
 class CophyBallDataset(Dataset):
     def __init__(self, mode="train", resolution=112, load_cd=True, sampling_mode="rand",
                  load_ab=False, load_state=False, path="/HDD/DATA/mingyu/reasoning/cophydataset/CoPhy_112/ballsCF"):

@@ -15,54 +15,10 @@ trans = transforms.Compose([
     transforms.ToTensor(),
     #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
-# class VQADataset(Dataset):
-#     def __init__(self, data_dir, split_type, transform=transform):
-#         self.data_dir = data_dir
-#         self.images_dir = os.path.join(self.data_dir, 'Images')
-#         self.annotations_path = os.path.join(self.data_dir, 'Annotations', 'v2_mscoco_{}_annotations.json'.format(split_type))
-#         self.questions_path = os.path.join(self.data_dir, 'Questions', 'v2_OpenEnded_mscoco_{}_questions.json'.format(split_type))
-#         self.transform = transform
-        
-#         with open(self.annotations_path, 'r') as f:
-#             annotations_data = json.load(f)
-#         with open(self.questions_path, 'r') as f:
-#             questions_data = json.load(f)['questions']
-            
-#         self.questions = []
-#         self.answers = []
-#         for q in questions_data:
-#             self.questions.append(q['question'])
-#             # print(annotations_data['annotations'])
-#             print(q['question_id'])
-#             self.answers.append(annotations_data['annotations'][q['question_id']])
-
-#     def __len__(self):
-#         return len(self.questions)
-
-#     def __getitem__(self, index):
-#         question = self.questions[index]
-#         answer = self.answers[index]
-#         image_id = answer['image_id']
-#         image_filename = str(image_id).zfill(12) + '.jpg'
-#         image_path = os.path.join(self.images_dir, 'COCO_train2014', image_filename)
-#         image = Image.open(image_path).convert('RGB')
-#         if self.transform is not None:
-#             image = self.transform(image)
-
-#         target = torch.zeros(len(answer['answers']))
-#         for i, answer_ in enumerate(answer['answers']):
-#             target[i] = answer_['answer_confidence']
-#         output = (image, question)
-#         return output, target
 
 def most_common_from_dict(dct):
     lst = [x["answer"] for x in dct]
     return max(set(lst), key=lst.count)
-
-# question_field = torchtext.data.Field(sequential=True,  # Indicate that the input is a sequence
-#                                       tokenize='spacy',  # Use spaCy tokenizer
-#                                       batch_first=True,  # Put the batch dimension first
-#                                       lower=True)  # Convert all words to lowercase
 
 class VQAv2Dataset(Dataset):
     IMAGE_PATH = {
